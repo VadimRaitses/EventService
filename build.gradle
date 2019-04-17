@@ -1,0 +1,42 @@
+plugins {
+    id 'org.springframework.boot' version '2.1.4.RELEASE'
+    id 'java'
+    id 'application'
+
+}
+
+apply plugin: 'io.spring.dependency-management'
+
+group = 'event-service'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+
+application {
+    mainClassName = 'com.eventservice.EventserviceApplication'
+    applicationDefaultJvmArgs = ['-Dspring.profiles.active=dev']
+
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'org.springframework.boot:spring-boot-starter-amqp'
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.7'
+
+
+}
