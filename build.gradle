@@ -8,13 +8,13 @@ plugins {
 apply plugin: 'io.spring.dependency-management'
 
 group = 'event-service'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.1'
 sourceCompatibility = '1.8'
 
 
 application {
     mainClassName = 'com.eventservice.EventserviceApplication'
-    applicationDefaultJvmArgs = ['-Dspring.profiles.active=dev']
+   // applicationDefaultJvmArgs = ['-Dspring.profiles.active=dev']
 
 }
 

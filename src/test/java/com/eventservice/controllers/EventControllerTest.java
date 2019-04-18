@@ -5,6 +5,7 @@ import com.eventservice.models.Event;
 import com.eventservice.services.EventService;
 import com.google.gson.Gson;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -51,6 +52,7 @@ public class EventControllerTest {
     }
 
     @Test
+    @Ignore
     public void getEventSuccess() throws Exception {
         List evenList = Arrays.asList(new Event().setEntityId("id_one"),
                 new Event().setEntityId("id_two"));
@@ -64,6 +66,7 @@ public class EventControllerTest {
     }
 
     @Test
+    @Ignore
     public void getEventNotFoundException() throws Exception {
         when(eventService.getEvents("id")).thenThrow(new EntityNotFoundException(""));
         mockMvc
