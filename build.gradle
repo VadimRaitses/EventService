@@ -14,7 +14,7 @@ sourceCompatibility = '1.8'
 
 application {
     mainClassName = 'com.eventservice.EventserviceApplication'
-   // applicationDefaultJvmArgs = ['-Dspring.profiles.active=dev']
+    applicationDefaultJvmArgs = ['-Dspring.profiles.active=dev']
 
 }
 
@@ -39,4 +39,52 @@ dependencies {
     compile group: 'com.google.code.gson', name: 'gson', version: '2.7'
 
 
+}
+
+
+
+task getEventService << {
+    println "${version}"
+    removeRunningDocker()
+    createEmployeeServiceContainer(version)
+    initAndRun()
+}
+
+
+
+static  createEmployeeServiceContainer(version) {
+    File dockerFile = new File("./Dockerfile")
+    if (dockerFile.exists())
+        dockerFile.delete()
+    dockerFile.createNewFile()
+    dockerFile.withWriter('UTF-8') { writer ->
+        writer.writeLine("FROM openjdk:8-jre")
+        writer.writeLine("ADD build/libs/eventservice-${version}.jar /event-service.jar")
+        writer.writeLine('CMD ["java", "-jar","event-service.jar"]')
+    }
+
+}
+
+
+static void initAndRun() {
+    println "init and run"
+    def commands = ["docker build -t eventservice:latest .",
+                    "docker run -d --name eventservice -p 8081:8081 --net=hubnetwork eventservice:latest"]
+    executeShell(commands)
+}
+
+static void executeShell(commands) {
+    println(":executeShell:")
+    commands.each {
+        println ":current shell: " + it
+        println it.execute().text
+    }
+}
+
+
+static void removeRunningDocker() {
+    println ":removeRunningDocker:"
+    def commands = ["docker stop eventservice",
+                    "docker rm -f eventservice"]
+    executeShell(commands)
 }

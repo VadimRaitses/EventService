@@ -4,9 +4,11 @@ import com.eventservice.dao.DaoRepository;
 import com.eventservice.dao.MongoDaoRepository;
 import com.eventservice.services.EventService;
 import com.eventservice.services.impl.EventServiceImpl;
+import com.eventservice.services.impl.ReceiverServiceImpl;
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 import com.mongodb.MongoClient;
+import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -25,25 +27,34 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 public class AppConfig {
 
 
-    @Autowired
-    private MongoProperties mongoProperties;
+    @Bean
+     MongoProperties mongoProperties(){
+       return  new MongoProperties();
+    }
 
-    @Autowired
-    private  RabbitMqProperties rabbitMqProperties;
+    @Bean
+      RabbitMqProperties rabbitMqProperties(){
+       return  new RabbitMqProperties();
+    }
 
     @Bean
     public MongoClient mongo() {
-        return new MongoClient(mongoProperties.getHost(), mongoProperties.getPort());
+        return new MongoClient(mongoProperties().getHost(), mongoProperties().getPort());
     }
 
     @Bean
     public MongoTemplate mongoTemplate() {
-        return new MongoTemplate(mongo(), mongoProperties.getDatabase());
+        return new MongoTemplate(mongo(), mongoProperties().getDatabase());
+    }
+
+    @Bean
+    Queue queue() {
+        return new Queue(rabbitMqProperties().getQueueName());
     }
 
     @Bean
     public ConnectionFactory connectionFactory() {
-        return new CachingConnectionFactory(rabbitMqProperties.getHost());
+        return new CachingConnectionFactory(rabbitMqProperties().getHost());
     }
 
     @Bean
@@ -58,8 +69,9 @@ public class AppConfig {
 
     @Bean("eventCollection")
     public String eventCollectionName() {
-        return rabbitMqProperties.getEventCollection();
+        return rabbitMqProperties().getEventCollection();
     }
+
 
     @Bean
     Gson gson() {
